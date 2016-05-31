@@ -1,0 +1,69 @@
+<aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+                        Users
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="/#/home"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a href="/#/users">Users</a></li> 
+                         <li>Add</li>                      
+                    </ol>
+                </section>
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-xs-12">
+
+                            <div class="box">
+                                    
+                                <!-- <div class="box-header">
+                                    <h3 class="box-title">Data Table With Full Features</h3>
+                                </div> -->
+                                <div class="box-body table-responsive">
+                                    <div class="alert alert-danger alert-dismissable" ng-show="message"><button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>{{message}}</div>   
+                                                                    
+                                    <form role="form">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <input type='hidden' name='id' value="{{userID}}" ng-model="id">
+                                            <label>First Name</label>
+                                            <input type="text" class="form-control" id="firstname" name='firstname' ng-model="firstname" placeholder="Enter Firstname" value="{{firstname}}">
+
+                                            <label>Last Name</label>
+                                            <input type="text" class="form-control" id="lastname" name='lastname' ng-model="lastname" placeholder="Enter Lastname" value="{{lastname}}">
+
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" id="email" name='email' ng-model="email" placeholder="Enter Email" value="{{email}}">
+
+                                            <label>Username</label>
+                                            <input type="text" class="form-control" id="username" name='username' ng-model="username" placeholder="Enter Username" value="{{username}}">
+
+                                            <label>Password</label>
+                                            <input type="text" class="form-control" id="password" name='password' ng-model="password" placeholder="Enter password" value="{{password}}" >
+
+                                            <label>Display Name</label>
+                                            <input type="text" class="form-control" id="displayname" name='displayname' ng-model="displayname" placeholder="Enter display name" value="{{displayname}}">
+
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name='enable' id='enable' ng-model='enable' checked="{{enableChecked}}"/>
+                                                    Enable
+                                                </label>
+                                            </div>                                          
+
+
+                                    </div><!-- /.box-body -->
+
+                                    <div class="box-footer">
+                                        <button type="button" class="btn btn-primary" ng-click="addUser()">Submit</button>
+                                    </div>
+                                </form>              
+                                  
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                        </div>
+                    </div>
+
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->

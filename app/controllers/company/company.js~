@@ -1,0 +1,219 @@
+var userObj = require('./../../models/users/users.js');
+var constantObj = require('./../../../constants.js');
+
+exports.list = function(req, res) {
+	
+	var outputJSON = "";
+	
+	userObj.find({is_deleted:false}, function(err, data) {
+		if(err) {
+			outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+		}
+		else {
+			outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 'data': data}
+			
+		}
+		res.jsonp(outputJSON);
+	});
+}
+
+exports.add = function(req, res) {
+
+	var errorMessage = "";
+	var outputJSON = "";
+	var userModelObj = {};
+
+
+	userModelObj.firstname = req.body.firstname;
+	userModelObj.lastname = req.body.lastname;
+	userModelObj.email = req.body.email;
+	userModelObj.username = req.body.username;
+	userModelObj.password = req.body.password;
+	userModelObj.displayName = req.body.displayname;
+	userModelObj.enable = req.body.enable;
+
+
+
+	userObj(userModelObj).save(req.body, function(err, data) { 
+		if(err) {
+			
+
+			switch(err.name) {
+				case 'ValidationError':
+				
+					for(field in err.errors) {
+						if(errorMessage == "") {
+							errorMessage = err.errors[field].message;
+						}
+						else {							
+							errorMessage+=", " + err.errors[field].message;
+						}
+					}//for
+				break;
+			}//switch
+			
+			outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
+		}//if
+		else {
+			outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userSuccess};
+		}
+
+
+		res.jsonp(outputJSON);
+
+	});
+
+}
+
+exports.updateUserStatus = function(req, res) {
+
+	var outputJSON = "";
+	var errorCount =0;
+	var inputData = req.body;
+
+	
+	for(var attributename in inputData){
+  		 
+  		  id = inputData[attributename]._id;
+  		   		  
+  		  userObj.findById(id, function(err, data) {
+
+  		  	if(err) {
+  		  		errorCount++;
+  		  	}
+  		  	else {
+  		  		data.enable = inputData[attributename].enable;
+  		  		data.save(function(err, data) {
+
+  		  			if(err) {
+  		  				errorCount++;
+  		  			}
+  		  			
+  		  		});
+  		  	}
+
+  		  	
+  		  });
+
+	}
+
+	if(errorCount > 0) {
+		outputJSON = {'status': 'success', 'messageId':402, 'message':constantObj.messages.userStatusUpdateFailure};
+	}
+	else {
+		outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userStatusUpdateSuccess};
+	}
+
+	res.jsonp(outputJSON);
+}
+
+exports.delete_user = function(req, res) {
+
+	var outputJSON = "";
+	var errorCount =0;
+	var inputData = req.body;
+
+	
+	for(var attributename in inputData){
+  		 
+  		  id = inputData[attributename]._id;
+  		   		  
+  		  userObj.findById(id, function(err, data) {
+
+  		  	if(err) {
+  		  		errorCount++;
+  		  	}
+  		  	else {
+  		  		data.is_deleted = inputData[attributename].is_deleted;
+
+  		    		data.save(function(err, data) {
+
+  		  			if(err) {
+  		  				errorCount++;
+  		  			}
+  		  			
+  		  		});
+  		  	}
+
+  		  	
+  		  });
+
+	}
+
+	if(errorCount > 0) {
+		outputJSON = {'status': 'success', 'messageId':403, 'message':constantObj.messages.userDeleteFailure};
+	}
+	else {
+		outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userDeleteSuccess};
+	}
+
+	res.jsonp(outputJSON);
+
+
+}
+
+exports.edit_user = function(req, res) {
+
+	var outputJSON = "";
+	
+	userObj.findById(req.params.id, function(err, data) {
+
+		if(err) {
+			outputJSON = {'status':'failure', 'messageId':203, 'message': constantObj.messages.errorRetreivingData};
+		}
+		else {
+			outputJSON = {'status':'success', 'messageId':200, 'message': constantObj.messages.successRetreivingData, 'data': data}
+		}
+
+		res.jsonp(outputJSON);
+	});
+}
+
+exports.update_user = function(req, res) {
+
+	var errorMessage = "";
+	var outputJSON = "";
+
+	
+	//update user
+	var id = req.body._id;
+	
+
+	userObj.findById(id, function(err, data) {
+		if(!err) {
+			data.firstname = req.body.firstname;
+			data.lastname = req.body.lastname;
+			data.email = req.body.email;
+			data.username = req.body.username;
+			data.displayName = req.body.displayname;
+			data.enable = req.body.enable;
+
+
+			data.save(function(err, data) {
+				
+				if(err) {
+					switch(err.name) {
+						case 'ValidationError':
+							for(field in err.errors) {
+								if(errorMessage == "") {
+									errorMessage = err.errors[field].message;
+								}
+								else {							
+									errorMessage+="\r\n" + err.errors[field].message;
+								}
+							}//for
+						break;
+					}//switch
+
+					outputJSON = {'status': 'failure', 'messageId':401, 'message':errorMessage};
+				}//if
+				else {
+					outputJSON = {'status': 'success', 'messageId':200, 'message':constantObj.messages.userUpdateSuccess};
+				}
+
+
+				res.jsonp(outputJSON);
+			});
+		}
+	});
+}
